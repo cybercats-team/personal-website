@@ -1,6 +1,6 @@
 import "@radix-ui/themes/styles.css";
-import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
+import AppearanceProvider from "./appearance";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,7 +11,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body>
-        <Theme>{children}</Theme>
+        <AppearanceProvider>{children}</AppearanceProvider>          
       </body>
     </html>
   );
