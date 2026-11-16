@@ -3,59 +3,23 @@
 import { createContext, useState, useEffect } from "react";
 import { Theme, type ThemeProps } from "@radix-ui/themes";
 
-export type AppearanceType = ThemeProps['appearance'];
+export type AppearanceType = "light" | "dark";
 export type AppearanceProviderProps = { children: React.ReactNode };
 
-export type AppearanceContextValue = {
-  appearance: AppearanceType;
-  setAppearance: (appearance: AppearanceType) => void;
-  setLightAppearance: () => void;
-  setDarkAppearance: () => void;
-  setInheritAppearance: () => void;
-  clearAppearance: () => void;
-  toggleAppearance: () => void;
-}
+export type AppearanceContextValue = [
+  appearance: AppearanceType,  
+  toggleAppearance: () => void
+];
 
-export const AppearanceContext = createContext<AppearanceContextValue>({
-  appearance: undefined,
-  setAppearance: () => {},
-  setLightAppearance: () => {},
-  setDarkAppearance: () => {},
-  setInheritAppearance: () => {},
-  clearAppearance: () => {},
-  toggleAppearance: () => {}
-});
+export const AppearanceContext = createContext<AppearanceContextValue>([
+  "light", 
+  () => {}
+]);
 
 export default function AppearanceProvider({ children }: AppearanceProviderProps) {
-  const [appearance, setAppearance_] = useState<ThemeProps['appearance']>("light");
-
-  const setAppearance = (appearance: AppearanceType) => setAppearance_(appearance);
-
-  const setLightAppearance = () => setAppearance('light')
-  const setDarkAppearance = () => setAppearance('dark')
-  const setInheritAppearance = () => setAppearance('inherit')
-  const clearAppearance = () => setAppearance(undefined)
-
-  const toggleAppearance = () => setAppearance_(current => {
-    switch (current) {
-      case 'dark':
-        return 'light';
-      case 'light':
-        return 'dark';
-      default:
-        return current;    
-    }
-  });
-
-  const value: AppearanceContextValue = {
-    appearance,
-    setAppearance,
-    setLightAppearance,
-    setDarkAppearance,
-    setInheritAppearance,
-    clearAppearance,
-    toggleAppearance
-  };
+  const [appearance, setAppearance] = useState<AppearanceType>("light");
+  const toggleAppearance = () => setAppearance(current => "light" === current ? "dark" : "light");
+  const value: AppearanceContextValue = [appearance, toggleAppearance];
 
   // Detect the operating system theme on first page load.
   useEffect(() => {

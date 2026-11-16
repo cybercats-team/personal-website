@@ -1,22 +1,24 @@
 'use client';
 
-import { use, useState } from "react";
+import { use, useState, useEffect, useRef } from "react";
+import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 
 import {
   Avatar,
   Badge,
   Box,
-  Button,
   Card,
   Container,
   Flex,
   Grid,
   Heading,
   IconButton,
-  Link,
-  ScrollArea,
+  Link,  
   Separator,
+  ScrollArea,
   Text,  
+  Popover,    
+  RadioCards,
 } from "@radix-ui/themes";
 
 import {
@@ -31,14 +33,18 @@ import {
   PaperPlaneIcon,
   PersonIcon,
   SunIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronDownIcon
 } from "@radix-ui/react-icons";
+
 import { AppearanceContext } from "./appearance";
 
 export default function Home({
   photoUrl = "",
   contactLinks = {},
 }) {
-  const { appearance, toggleAppearance } = use(AppearanceContext);
+  const [appearance, toggleAppearance] = use(AppearanceContext);
 
   // --------------------------------------------------
   // Data
@@ -158,6 +164,22 @@ export default function Home({
           role: "Senior React developer, Senior blockchain developer",
           stack:
             "React/NextJS/Jotai/SWR/EthersJS/LiFi/Web3Onboard",
+        },
+        {
+          name: "ERCC dashboard",
+          role: "Tech consultant at webapp (dashboard)",
+          stack: "React/TanStack/Zustand",
+        },
+        {
+          name: "Official website / webapp for crypto token",
+          role: "Team lead, Architect, Tech consultant",
+          stack: "RN for Web/NativeBase/React Navigation/EthersJS",
+        },
+        {
+          name: "Official wallet app for crypto token",
+          role: "Team lead, Architect, Senior full-stack (MERN) developer, Blockchain developer",
+          stack:
+            "MERN/RN for Web/NativeBase/React Paper/React Navigation/Web3JS/Undux/Axios/Realm/ThreadDB",
         },
       ],
     },
@@ -326,17 +348,114 @@ export default function Home({
   // --------------------------------------------------
   // State
   // --------------------------------------------------
-
   
   const [activeCompany, setActiveCompany] = useState("ApriorIT");
-
-  const selectedCompany =
-    experience.find((company) => company.name === activeCompany) ||
-    experience[0];
 
   const footerContacts = contacts.filter((contact) =>
     ["email", "telegram", "linkedin"].includes(contact.id)
   );
+
+  const [companyPickerOpen, setCompanyPickerOpen] = useState(false);
+
+  const [projectsPerPage, setProjectsPerPage] = useState(3);
+
+  const [canScrollProjectsLeft, setCanScrollProjectsLeft] =
+    useState(false);
+
+  const [canScrollProjectsRight, setCanScrollProjectsRight] =
+    useState(false);
+
+  const projectsViewportRef = useRef<HTMLDivElement | null>(null);
+
+  const selectedCompany =
+    experience.find(
+      (company) => company.name === activeCompany
+    ) || experience[0];
+
+  // Responsive number of visible projects.
+  useEffect(() => {
+    const update = () => {
+      const width = window.innerWidth;
+
+      const next = width >= 1024 ? 3 : width >= 768 ? 2 : 1;
+
+      setProjectsPerPage((current) =>
+        current === next ? current : next
+      );
+    };
+
+    update();
+
+    window.addEventListener("resize", update);
+
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  // Group projects into pages.
+  const projectPages = [];
+
+  for (
+    let index = 0;
+    index < selectedCompany.projects.length;
+    index += projectsPerPage
+  ) {
+    projectPages.push(
+      selectedCompany.projects.slice(
+        index,
+        index + projectsPerPage
+      )
+    );
+  }
+
+  // Reset position and maintain arrow state.
+  useEffect(() => {
+    const viewport = projectsViewportRef.current;
+
+    if (!viewport) return;
+
+    const updateControls = () => {
+      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+
+      setCanScrollProjectsLeft(viewport.scrollLeft > 1);
+      setCanScrollProjectsRight(
+        viewport.scrollLeft < maxScroll - 1
+      );
+    };
+
+    viewport.scrollLeft = 0;
+    updateControls();
+
+    viewport.addEventListener("scroll", updateControls, {
+      passive: true,
+    });
+
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(updateControls)
+        : null;
+
+    observer?.observe(viewport);
+
+    window.addEventListener("resize", updateControls);
+
+    return () => {
+      viewport.removeEventListener("scroll", updateControls);
+      window.removeEventListener("resize", updateControls);
+      observer?.disconnect();
+    };
+  }, [activeCompany, projectsPerPage]);
+
+  // Move by one complete page.
+  const moveProjectPage = (direction) => {
+    const viewport = projectsViewportRef.current;
+
+    if (!viewport) return;
+
+    viewport.scrollBy({
+      left: direction * viewport.clientWidth,
+      behavior: "smooth",
+    });
+  };
 
   // --------------------------------------------------
   // Render
@@ -347,9 +466,14 @@ export default function Home({
 
         {/* STICKY HEADER */}
 
-        <Box position="sticky" top="0">
-          <Container size="3">
-            <Card variant="surface" size="2">
+        <Box
+          position="sticky"
+          top="0"
+          width="100%"
+          style={{ zIndex: 1 }}
+        >
+          <Card size="2" variant="surface">
+            <Container size="3">
               <Flex
                 align="center"
                 justify="between"
@@ -360,47 +484,55 @@ export default function Home({
                   Oleksii Serdiukov
                 </Text>
 
-                <Box overflowX="auto" flexGrow="1">
-                  <Flex                    
-                    aria-label="CV navigation"
-                    align="center"
-                    gap="4"
-                    width="max-content"
-                  >
-                    {navItems.map((item) => (
-                      <Link
-                        key={item.id}
-                        href={`#${item.id}`}
-                        size="2"
-                        color="gray"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </Flex>
-                </Box>
+                <NavigationMenu.Root orientation="horizontal">
+                  <NavigationMenu.List asChild>
+                    <Flex
+                      as="div"
+                      role="list"
+                      align="center"
+                      gap="3"
+                      wrap="wrap"
+                    >
+                      {navItems.map((item) => (
+                        <NavigationMenu.Item
+                          key={item.id}
+                          asChild
+                        >
+                          <Box as="div" role="listitem">
+                            <NavigationMenu.Link asChild>
+                              <Link
+                                href={`#${item.id}`}
+                                size="2"
+                                color="gray"
+                                underline="hover"
+                              >
+                                {item.label}
+                              </Link>
+                            </NavigationMenu.Link>
+                          </Box>
+                        </NavigationMenu.Item>
+                      ))}
+                    </Flex>
+                  </NavigationMenu.List>
+                </NavigationMenu.Root>
 
                 <IconButton
                   variant="soft"
                   color="gray"
                   radius="full"
                   size="2"
-                  aria-label={
-                    appearance === "dark"
-                      ? "Switch to light theme"
-                      : "Switch to dark theme"
-                  }
+                  aria-label="Toggle theme"
                   onClick={toggleAppearance}
                 >
                   {appearance === "dark" ? (
-                    <SunIcon width="18" height="18" />
+                    <SunIcon />
                   ) : (
-                    <MoonIcon width="18" height="18" />
+                    <MoonIcon />
                   )}
                 </IconButton>
               </Flex>
-            </Card>
-          </Container>
+            </Container>
+          </Card>
         </Box>
 
         {/* PAGE CONTENT */}
@@ -514,159 +646,291 @@ export default function Home({
             <Box id="career">
               <Card size="3">
                 <Flex direction="column" gap="4">
+
+                  {/* TITLE */}
+
                   <Heading size="5">
                     CAREER HISTORY & PROJECT HIGHLIGHTS
                   </Heading>
 
                   <Separator size="4" />
 
-                  <Grid
-                    columns={{ initial: "1", md: "2" }}
-                    gap="4"
+                  {/* COMPANY HEADER */}
+
+                  <Flex
+                    align="center"
+                    justify="between"
+                    gap="3"
+                    wrap="wrap"
                   >
+                    <Flex direction="column" gap="1" flexGrow="1">
 
-                    {/* LEFT: COMPANIES */}
+                      <Flex align="center" gap="2" wrap="wrap">
 
-                    <Flex direction="column" gap="3">
-                      <Heading size="3" color="gray">
-                        Companies
-                      </Heading>
-
-                      {experience.map((company) => {
-                        const isActive =
-                          activeCompany === company.name;
-
-                        return (
-                          <Button
-                            key={company.name}
-                            variant={isActive ? "soft" : "ghost"}
-                            color={isActive ? "teal" : "gray"}
-                            size="3"
-                            onClick={() =>
-                              setActiveCompany(company.name)
-                            }
-                          >
-                            <Flex
-                              direction="column"
-                              align="start"
-                              gap="1"
-                            >
-                              <Text weight="bold" size="2">
-                                {company.name}
-                              </Text>
-
-                              <Text size="1" color="gray">
-                                {company.timeline}
-                              </Text>
-
-                              <Text
-                                size="1"
-                                color="gray"
-                                wrap="wrap"
-                              >
-                                {company.role}
-                              </Text>
-                            </Flex>
-                          </Button>
-                        );
-                      })}
-                    </Flex>
-
-                    {/* RIGHT: PROJECT CAROUSEL */}
-
-                    <Flex direction="column" gap="3">
-                      <Flex
-                        align="center"
-                        justify="between"
-                        wrap="wrap"
-                        gap="2"
-                      >
-                        <Heading size="3">
+                        <Heading size="4">
                           {selectedCompany.name}
                         </Heading>
 
-                        <Badge color="teal" variant="soft">
-                          {selectedCompany.projects.length}{" "}
-                          {selectedCompany.projects.length === 1
-                            ? "project"
-                            : "projects"}
-                        </Badge>
+                        {/* ICON-ONLY COMPANY PICKER */}
+
+                        <Popover.Root
+                          open={companyPickerOpen}
+                          onOpenChange={setCompanyPickerOpen}
+                        >
+                          <Popover.Trigger>
+                            <IconButton
+                              variant="soft"
+                              color="gray"
+                              size="2"
+                              radius="full"
+                              aria-label="Select company"
+                              title="Select company"
+                            >
+                              <ChevronDownIcon />
+                            </IconButton>
+                          </Popover.Trigger>
+
+                          <Popover.Content
+                            align="start"
+                            side="bottom"
+                            sideOffset={8}
+                            width="360px"
+                            maxWidth="calc(100vw - 32px)"
+                            maxHeight="360px"
+                            size="2"
+                          >
+                            <Flex direction="column" gap="3">
+
+                              <Heading size="3">
+                                Select a company
+                              </Heading>
+
+                              {/* COMPANY LIST SCROLL AREA */}
+
+                              <ScrollArea
+                                type="always"
+                                scrollbars="vertical"
+                                size="2"
+                                style={{ width: "100%", height: 280 }}
+                              >
+                                <Flex
+                                  direction="column"
+                                  gap="2"
+                                  p="1"
+                                  pr="4"
+                                >
+                                  <RadioCards.Root
+                                    columns="1"
+                                    gap="2"
+                                    size="2"
+                                    color="teal"
+                                    value={activeCompany}
+                                    onValueChange={(value) => {
+                                      setActiveCompany(value);
+                                      setCompanyPickerOpen(false);
+                                    }}
+                                  >
+                                    {experience.map((company) => (
+                                      <RadioCards.Item
+                                        key={company.name}
+                                        value={company.name}
+                                      >
+                                        <Flex
+                                          direction="column"
+                                          align="start"
+                                          gap="1"
+                                          width="100%"
+                                        >
+                                          <Text as="div" size="2" weight="bold">
+                                            {company.name}
+                                          </Text>
+
+                                          <Text as="div" size="1" color="gray">
+                                            {company.timeline}
+                                          </Text>
+
+                                          <Text as="div" size="1" color="gray">
+                                            {company.role}
+                                          </Text>
+                                        </Flex>
+                                      </RadioCards.Item>
+                                    ))}
+                                  </RadioCards.Root>
+                                </Flex>
+                              </ScrollArea>
+
+                            </Flex>
+                          </Popover.Content>
+                        </Popover.Root>
+
                       </Flex>
 
-                      <Text color="gray" size="2">
+                      <Text
+                        as="div"
+                        size="2"
+                        color="gray"
+                      >
                         {selectedCompany.timeline}
                       </Text>
 
-                      <ScrollArea
-                        type="auto"
-                        scrollbars="horizontal"
+                      <Text
+                        as="div"
+                        size="2"
                       >
-                        <Flex
-                          gap="3"
-                          width="max-content"
-                          pb="3"
+                        {selectedCompany.role}
+                      </Text>
+
+                    </Flex>
+                  </Flex>
+
+                  <Separator size="4" />
+
+                  {/* PROJECTS */}
+
+                  <Flex direction="column" gap="3">
+
+                    {/* PROJECT HEADER */}
+
+                    <Flex
+                      align="center"
+                      justify="between"
+                      gap="3"
+                    >
+                      <Heading size="3">
+                        Projects
+                      </Heading>
+
+                      <Flex align="center" gap="2">
+
+                        <Badge color="teal" variant="soft">
+                          {selectedCompany.projects.length} projects
+                        </Badge>
+
+                        <IconButton
+                          variant="soft"
+                          color="gray"
+                          radius="full"
+                          size="2"
+                          disabled={!canScrollProjectsLeft}
+                          onClick={() => moveProjectPage(-1)}
+                          aria-label="Previous projects"
                         >
-                          {selectedCompany.projects.map(
-                            (project, index) => (
-                              <Box
-                                key={`${selectedCompany.name}-${index}`}
-                                width="280px"
-                                flexShrink="0"
-                              >
+                          <ChevronLeftIcon />
+                        </IconButton>
+
+                        <IconButton
+                          variant="soft"
+                          color="gray"
+                          radius="full"
+                          size="2"
+                          disabled={!canScrollProjectsRight}
+                          onClick={() => moveProjectPage(1)}
+                          aria-label="Next projects"
+                        >
+                          <ChevronRightIcon />
+                        </IconButton>
+
+                      </Flex>
+                    </Flex>
+
+                    {/* PROJECT CAROUSEL */}
+
+                    {/* Buttons are the only carousel navigation. The clipped Box has no
+                        visible scrollbar and cannot be manually scrolled by wheel/touch. */}
+                    <Box
+                      ref={projectsViewportRef}
+                      width="100%"
+                      height="360px"
+                      overflow="hidden"
+                    >
+                      <Flex
+                        width="100%"
+                        gap="0"
+                        align="stretch"
+                        wrap="nowrap"
+                      >
+                        {projectPages.map((page, pageIndex) => (
+                          <Box
+                            key={pageIndex}
+                            width="100%"
+                            flexShrink="0"
+                          >
+                            <Grid
+                              columns={String(projectsPerPage)}
+                              gap="3"
+                              width="100%"
+                              align="stretch"
+                            >
+                              {page.map((project, index) => (
                                 <Card
-                                  size="2"
+                                  key={`${selectedCompany.name}-${pageIndex}-${index}`}
+                                  asChild
+                                  size="3"
                                   variant="surface"
                                 >
-                                  <Flex
-                                    direction="column"
-                                    gap="3"
+                                  <Box
+                                    width="100%"
+                                    minWidth="0"
+                                    height="320px"
                                   >
-                                    <Heading size="3">
-                                      {project.name}
-                                    </Heading>
+                                    <Flex
+                                      direction="column"
+                                      gap="3"
+                                      height="100%"
+                                    >
+                                      {/* PROJECT TITLE */}
 
-                                    <Separator size="4" />
+                                      <Heading size="3">
+                                        {project.name}
+                                      </Heading>
 
-                                    <Box>
-                                      <Text
-                                        size="1"
-                                        color="gray"
-                                        weight="bold"
-                                      >
-                                        ROLE
-                                      </Text>
+                                      <Separator size="4" />
 
-                                      <Text size="2">
-                                        {project.role}
-                                      </Text>
-                                    </Box>
+                                      {/* ROLE */}
 
-                                    <Box>
-                                      <Text
-                                        size="1"
-                                        color="gray"
-                                        weight="bold"
-                                      >
-                                        STACK
-                                      </Text>
+                                      <Flex direction="column" gap="1">
+                                        <Text
+                                          as="div"
+                                          size="1"
+                                          weight="bold"
+                                          color="gray"
+                                        >
+                                          ROLE
+                                        </Text>
 
-                                      <Text size="2">
-                                        {project.stack}
-                                      </Text>
-                                    </Box>
-                                  </Flex>
+                                        <Text as="div" size="2">
+                                          {project.role}
+                                        </Text>
+                                      </Flex>
+
+                                      {/* STACK */}
+
+                                      <Flex direction="column" gap="1">
+                                        <Text
+                                          as="div"
+                                          size="1"
+                                          weight="bold"
+                                          color="gray"
+                                        >
+                                          STACK
+                                        </Text>
+
+                                        <Text as="div" size="2">
+                                          {project.stack}
+                                        </Text>
+                                      </Flex>
+                                    </Flex>
+                                  </Box>
                                 </Card>
-                              </Box>
-                            )
-                          )}
-                        </Flex>
-                      </ScrollArea>
+                              ))}
+                            </Grid>
+                          </Box>
+                        ))}
+                      </Flex>
+                    </Box>
 
-                      <Text size="1" color="gray">
-                        Scroll horizontally to explore projects
-                      </Text>
-                    </Flex>
-                  </Grid>
+                  </Flex>
+
                 </Flex>
               </Card>
             </Box>
