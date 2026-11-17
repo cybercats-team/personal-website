@@ -24,8 +24,8 @@ class ApiClient<DefaultResourceType> {
     return `${this.m_server}${this.m_resource}/${resourceId}`;
   }
 
-  private async parse<T>(asyncResponse: Promise<Response>): Promise<T> {
-    return asyncResponse.then(response => response.json()) as Promise<T>;
+  private async parse<ResourceType>(asyncResponse: Promise<Response>): Promise<ResourceType> {
+    return asyncResponse.then(response => response.json()) as Promise<ResourceType>;
   }
 }
 
