@@ -52,17 +52,14 @@ export default function Contacts({
 
   return filteredContacts.map(({ id, label, href }) => {    
     const Icon = socialIcons[id]
+    const isHttp = href.startsWith("http")
 
     return (
       <Link
         key={id}
         href={href}
-        target={href.startsWith("http") ? "_blank" : undefined}
-        rel={
-          href.startsWith("http")
-            ? "noreferrer"
-            : undefined
-        }
+        target={isHttp ? "_blank" : undefined}
+        rel={isHttp ? "noreferrer" : undefined}
         color="gray"
         {...linkProps}
       >

@@ -8,8 +8,7 @@ export type Info = {
   contacts: ContactInfo[];
 };
 
-export const getInfo = (): Info => {
-  const contacts: ContactInfo[] = [
+const allContacts: ContactInfo[] = [
     {
       id: "email",
       label: "email",
@@ -55,7 +54,10 @@ export const getInfo = (): Info => {
       label: "calendly",
       href: '#',
     },
-  ].filter((contact) => Boolean('#' !== contact.href));
+  ]
+
+export const getInfo = (): Info => {
+  const contacts = allContacts.filter(({ href }) => Boolean('#' !== href));
 
   return { contacts };
 };
