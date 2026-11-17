@@ -6,8 +6,8 @@ import {
   Text
 } from "@radix-ui/themes";
 
-import { InlineNav, PopoverNav } from "@/components/Header/Nav";
-import ThemeSwitch from "@/components/Header/ThemeSwitch";
+import { InlineNav, PopoverNav } from "@/app/_components/Header/Nav";
+import ThemeSwitch from "@/app/_components/Header/ThemeSwitch";
 
 export default function Header() {
   return (

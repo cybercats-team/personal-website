@@ -1,4 +1,4 @@
-import Contacts, { ContactsProps } from "@/ui/Contacts";
+import Contacts, { ContactsProps } from "@/app/_ui/Contacts";
 
 export default function InfoContacts({ contacts }: ContactsProps) {
   return (

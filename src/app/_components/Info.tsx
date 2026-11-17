@@ -10,7 +10,7 @@ import {
 } from "@radix-ui/themes";
 
 import { getInfo } from "@/api/info";
-import InfoContacts from "@/components/Info/Contacts";
+import InfoContacts from "@/app/_components/Info/Contacts";
 
 export default function Info() {
   const info = getInfo();

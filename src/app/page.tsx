@@ -11,7 +11,6 @@ import {
   Grid,
   Heading,
   IconButton,
-  Link,
   Popover,
   RadioCards,
   ScrollArea,
@@ -20,16 +19,15 @@ import {
 } from "@radix-ui/themes";
 
 import {
-  ArrowUpIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon
 } from "@radix-ui/react-icons";
 
 import { getInfo } from "@/api/info";
-import FooterContacts from "@/components/Footer/Contacts";
-import Header from "@/components/Header";
-import Info from "@/components/Info";
+import Footer from "@/app/_components/Footer";
+import Header from "@/app/_components/Header";
+import Info from "@/app/_components/Info";
 
 export default function Home({
   photoUrl = "",  
@@ -711,53 +709,8 @@ export default function Home({
           </Flex>
         </Container>
 
-        {/* FOOTER */}
-
         <Separator size="4" />
-
-        <Container size="3">
-          <Flex
-            py="4"
-            gap="3"
-            align="center"
-            justify="between"
-            wrap="wrap"
-          >
-            <Text size="1" color="gray">
-              © {new Date().getFullYear()} Oleksii Serdiukov
-            </Text>
-
-            <Flex align="center" gap="3" wrap="wrap">
-              <Link
-                href="https://vercel.com"
-                target="_blank"
-                rel="noreferrer"
-                size="1"
-                color="gray"
-              >
-                Powered by Vercel
-              </Link>
-
-              <FooterContacts contacts={contacts} />
-
-              <IconButton
-                type="button"
-                variant="soft"
-                color="gray"
-                radius="full"
-                size="2"
-                aria-label="Scroll to top"
-                title="Scroll to top"
-                onClick={() =>
-                  window.scrollTo({ top: 0, behavior: "smooth" })
-                }
-              >
-                <ArrowUpIcon />
-              </IconButton>
-            </Flex>
-          </Flex>
-        </Container>
-
+        <Footer />
       </Box>    
   );
 }

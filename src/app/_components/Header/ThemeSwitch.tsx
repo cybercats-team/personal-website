@@ -12,7 +12,7 @@ import {
   SunIcon
 } from "@radix-ui/react-icons";
 
-import { AppearanceContext } from "@/providers/appearance";
+import { AppearanceContext } from "@/app/_providers/appearance";
 
 export default function ThemeSwitch() {
   const [appearance, toggleAppearance] = use(AppearanceContext)
