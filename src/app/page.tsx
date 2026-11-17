@@ -1,7 +1,6 @@
 'use client';
 
-import { use, useState, useEffect, useRef } from "react";
-import * as NavigationMenu from "@radix-ui/react-navigation-menu";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Avatar,
@@ -13,53 +12,39 @@ import {
   Grid,
   Heading,
   IconButton,
-  Link,  
-  Separator,
-  ScrollArea,
-  Text,  
-  Popover,    
+  Link,
+  Popover,
   RadioCards,
+  ScrollArea,
+  Separator,
+  Text,
 } from "@radix-ui/themes";
 
 import {
+  ArrowUpIcon,
   CalendarIcon,
   ChatBubbleIcon,
-  EnvelopeClosedIcon,
-  GitHubLogoIcon,
-  LinkedInLogoIcon,
-  Link2Icon,
-  MobileIcon,
-  MoonIcon,
-  PaperPlaneIcon,
-  PersonIcon,
-  SunIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ChevronDownIcon
+  EnvelopeClosedIcon,
+  GitHubLogoIcon,
+  Link2Icon,
+  LinkedInLogoIcon,
+  MobileIcon,
+  PaperPlaneIcon,
+  PersonIcon
 } from "@radix-ui/react-icons";
 
-import { AppearanceContext } from "./appearance";
+import Header from "@/components/Header";
 
 export default function Home({
   photoUrl = "",
   contactLinks = {},
 }) {
-  const [appearance, toggleAppearance] = use(AppearanceContext);
-
   // --------------------------------------------------
   // Data
   // --------------------------------------------------
-
-  const navItems = [
-    { id: "about", label: "About" },
-    { id: "expertise", label: "Expertise" },
-    { id: "tech-stacks", label: "Tech stacks" },
-    { id: "tech-skills", label: "Tech skills" },
-    { id: "architecture", label: "Architecture" },
-    { id: "leadership", label: "Leadership" },
-    { id: "expectations", label: "Expectations" },
-    { id: "career", label: "Career" },
-  ];
 
   const sections = [
     {
@@ -463,78 +448,7 @@ export default function Home({
 
   return (    
       <Box minHeight="100vh">
-
-        {/* STICKY HEADER */}
-
-        <Box
-          position="sticky"
-          top="0"
-          width="100%"
-          style={{ zIndex: 1 }}
-        >
-          <Card size="2" variant="surface">
-            <Container size="3">
-              <Flex
-                align="center"
-                justify="between"
-                gap="3"
-                wrap="wrap"
-              >
-                <Text weight="bold" size="3">
-                  Oleksii Serdiukov
-                </Text>
-
-                <NavigationMenu.Root orientation="horizontal">
-                  <NavigationMenu.List asChild>
-                    <Flex
-                      as="div"
-                      role="list"
-                      align="center"
-                      gap="3"
-                      wrap="wrap"
-                    >
-                      {navItems.map((item) => (
-                        <NavigationMenu.Item
-                          key={item.id}
-                          asChild
-                        >
-                          <Box as="div" role="listitem">
-                            <NavigationMenu.Link asChild>
-                              <Link
-                                href={`#${item.id}`}
-                                size="2"
-                                color="gray"
-                                underline="hover"
-                              >
-                                {item.label}
-                              </Link>
-                            </NavigationMenu.Link>
-                          </Box>
-                        </NavigationMenu.Item>
-                      ))}
-                    </Flex>
-                  </NavigationMenu.List>
-                </NavigationMenu.Root>
-
-                <IconButton
-                  variant="soft"
-                  color="gray"
-                  radius="full"
-                  size="2"
-                  aria-label="Toggle theme"
-                  onClick={toggleAppearance}
-                >
-                  {appearance === "dark" ? (
-                    <SunIcon />
-                  ) : (
-                    <MoonIcon />
-                  )}
-                </IconButton>
-              </Flex>
-            </Container>
-          </Card>
-        </Box>
-
+        <Header />
         {/* PAGE CONTENT */}
 
         <Container size="3">
@@ -986,6 +900,21 @@ export default function Home({
                   </Flex>
                 </Link>
               ))}
+
+              <IconButton
+                type="button"
+                variant="soft"
+                color="gray"
+                radius="full"
+                size="2"
+                aria-label="Scroll to top"
+                title="Scroll to top"
+                onClick={() =>
+                  window.scrollTo({ top: 0, behavior: "smooth" })
+                }
+              >
+                <ArrowUpIcon />
+              </IconButton>
             </Flex>
           </Flex>
         </Container>
