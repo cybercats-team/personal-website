@@ -22,26 +22,22 @@ import {
 
 import {
   ArrowUpIcon,
-  CalendarIcon,
-  ChatBubbleIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
-  ChevronRightIcon,
-  EnvelopeClosedIcon,
-  GitHubLogoIcon,
-  Link2Icon,
-  LinkedInLogoIcon,
-  MobileIcon,
-  PaperPlaneIcon,
-  PersonIcon
+  ChevronRightIcon
 } from "@radix-ui/react-icons";
 
+import FooterContacts from "@/components/Footer/Contacts";
 import Header from "@/components/Header";
+import InfoContacts from "@/components/Info/Contacts";
+import { getContacts } from "@/api/info";
 
 export default function Home({
   photoUrl = "",
   contactLinks = {},
 }) {
+  const contacts = getContacts();
+  
   // --------------------------------------------------
   // Data
   // --------------------------------------------------
@@ -270,75 +266,10 @@ export default function Home({
   ];
 
   // --------------------------------------------------
-  // Contacts
-  // --------------------------------------------------
-
-  const contacts = [
-    {
-      id: "email",
-      label: "email",
-      href: "mailto:alexcyberneticist@gmail.com",
-      Icon: EnvelopeClosedIcon,
-    },
-    {
-      id: "phone",
-      label: "phone",
-      href: "tel:+380639549357",
-      Icon: MobileIcon,
-    },
-    {
-      id: "linkedin",
-      label: "linkedin",
-      href: '#',
-      Icon: LinkedInLogoIcon,
-    },
-    {
-      id: "upwork",
-      label: "upwork",
-      href: '#',
-      Icon: Link2Icon,
-    },
-    {
-      id: "github",
-      label: "github",
-      href: '#',
-      Icon: GitHubLogoIcon,
-    },
-    {
-      id: "telegram",
-      label: "telegram",
-      href: '#',
-      Icon: PaperPlaneIcon,
-    },
-    {
-      id: "viber",
-      label: "viber",
-      href: '#',
-      Icon: ChatBubbleIcon,
-    },
-    {
-      id: "gravatar",
-      label: "gravatar",
-      href: '#',
-      Icon: PersonIcon,
-    },
-    {
-      id: "calendly",
-      label: "calendly",
-      href: '#',
-      Icon: CalendarIcon,
-    },
-  ].filter((contact) => Boolean('#' !== contact.href));
-
-  // --------------------------------------------------
   // State
   // --------------------------------------------------
   
   const [activeCompany, setActiveCompany] = useState("ApriorIT");
-
-  const footerContacts = contacts.filter((contact) =>
-    ["email", "telegram", "linkedin"].includes(contact.id)
-  );
 
   const [companyPickerOpen, setCompanyPickerOpen] = useState(false);
 
@@ -448,9 +379,7 @@ export default function Home({
 
   return (    
       <Box minHeight="100vh">
-        <Header />
-        {/* PAGE CONTENT */}
-
+        <Header />        
         <Container size="3">
           <Flex direction="column" gap="4" py="5">
 
@@ -496,27 +425,7 @@ export default function Home({
                     <Separator size="4" my="2" />
 
                     <Flex gap="3" wrap="wrap">
-                      {contacts.map(({ id, label, href, Icon }) => (
-                        <Link
-                          key={id}
-                          href={href}
-                          target={
-                            href.startsWith("http") ? "_blank" : undefined
-                          }
-                          rel={
-                            href.startsWith("http")
-                              ? "noreferrer"
-                              : undefined
-                          }
-                          color="gray"
-                          underline="hover"
-                        >
-                          <Flex align="center" gap="1">
-                            <Icon width="16" height="16" />
-                            <Text size="2">{label}</Text>
-                          </Flex>
-                        </Link>
-                      ))}
+                      <InfoContacts contacts={contacts} />
                     </Flex>
                   </Flex>
                 </Flex>
@@ -879,27 +788,7 @@ export default function Home({
                 Powered by Vercel
               </Link>
 
-              {footerContacts.map(({ id, label, href, Icon }) => (
-                <Link
-                  key={id}
-                  href={href}
-                  target={
-                    href.startsWith("http") ? "_blank" : undefined
-                  }
-                  rel={
-                    href.startsWith("http")
-                      ? "noreferrer"
-                      : undefined
-                  }
-                  size="1"
-                  color="gray"
-                >
-                  <Flex align="center" gap="1">
-                    <Icon width="14" height="14" />
-                    {label}
-                  </Flex>
-                </Link>
-              ))}
+              <FooterContacts contacts={contacts} />
 
               <IconButton
                 type="button"
