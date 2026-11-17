@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Box,
   Card,
@@ -28,7 +26,6 @@ export default function Header() {
             wrap="nowrap"
             width="100%"
           >
-            {/* LEFT: mobile hamburger + name; desktop name only */}
             <Flex
               align="center"
               gap="2"
@@ -42,11 +39,7 @@ export default function Header() {
                 </Text>
               </Box>
             </Flex>
-
-            {/* DESKTOP NAVIGATION */}
             <InlineNav />
-
-            {/* THEME SWITCH: always on the right */}
             <ThemeSwitch />
           </Flex>
         </Container>

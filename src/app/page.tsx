@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import {
-  Avatar,
   Badge,
   Box,
   Card,
@@ -17,7 +16,7 @@ import {
   RadioCards,
   ScrollArea,
   Separator,
-  Text,
+  Text
 } from "@radix-ui/themes";
 
 import {
@@ -27,17 +26,16 @@ import {
   ChevronRightIcon
 } from "@radix-ui/react-icons";
 
+import { getInfo } from "@/api/info";
 import FooterContacts from "@/components/Footer/Contacts";
 import Header from "@/components/Header";
-import InfoContacts from "@/components/Info/Contacts";
-import { getContacts } from "@/api/info";
+import Info from "@/components/Info";
 
 export default function Home({
-  photoUrl = "",
-  contactLinks = {},
+  photoUrl = "",  
 }) {
-  const contacts = getContacts();
-  
+  const { contacts } = getInfo();
+
   // --------------------------------------------------
   // Data
   // --------------------------------------------------
@@ -382,55 +380,7 @@ export default function Home({
         <Header />        
         <Container size="3">
           <Flex direction="column" gap="4" py="5">
-
-            {/* ABOUT */}
-
-            <Box id="about">
-              <Card size="3">
-                <Flex
-                  direction={{ initial: "column", sm: "row" }}
-                  align={{ initial: "start", sm: "center" }}
-                  gap="5"
-                >
-                  <Avatar
-                    src={photoUrl || undefined}
-                    fallback="OS"
-                    size="8"
-                    radius="full"
-                  />
-
-                  <Flex direction="column" gap="2" flexGrow="1">
-                    <Heading size="7">
-                      Oleksii Serdiukov
-                    </Heading>
-
-                    <Heading
-                      size="4"
-                      weight="medium"
-                      color="gray"
-                    >
-                      Senior Software Developer, Team lead, Architect
-                    </Heading>
-
-                    <Text color="gray" size="2">
-                      Ukraine, Kyiv region, Boiarka
-                    </Text>
-
-                    <Flex align="center" gap="2">
-                      <Badge color="teal" variant="soft">
-                        English: Upper-Intermediate
-                      </Badge>
-                    </Flex>
-
-                    <Separator size="4" my="2" />
-
-                    <Flex gap="3" wrap="wrap">
-                      <InfoContacts contacts={contacts} />
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Card>
-            </Box>
+            <Info />
 
             {/* CV SECTIONS */}
 
