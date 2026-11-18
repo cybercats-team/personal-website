@@ -1,7 +1,5 @@
 'use client';
 
-import { use } from "react";
-
 import {
   Box,
   IconButton
@@ -12,10 +10,10 @@ import {
   SunIcon
 } from "@radix-ui/react-icons";
 
-import { AppearanceContext } from "@/app/_providers/AppearanceProvider";
+import useAppearance from "@/hooks/useAppearance";
 
 export default function ThemeSwitch() {
-  const [appearance, toggleAppearance] = use(AppearanceContext)
+  const [appearance, toggleAppearance] = useAppearance();
   
   return (
     <Box flexShrink="0">
