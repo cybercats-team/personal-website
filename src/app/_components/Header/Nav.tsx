@@ -12,7 +12,7 @@ import {
   HamburgerMenuIcon
 } from "@radix-ui/react-icons";
 
-import { GetNavItems } from "@/storage/nav";
+import { GetNavItems } from "@/store/nav";
 import PopoverNavItem from "@/app/_components/Header/Nav/PopoverNavItem";
 import { PopoverNavProvider } from "@/app/_providers/PopoverNav";
 

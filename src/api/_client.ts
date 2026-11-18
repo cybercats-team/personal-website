@@ -10,8 +10,8 @@ const apiConfig: ApiConfig = {
 
 class ApiClient<DefaultResourceType> {
   constructor(
-    private m_resource: string,
-    private m_server: string
+    private resource: string,
+    private server: string
   ) { }
 
   async get<ResourceType = DefaultResourceType>(resourceId: string = '') {
@@ -21,7 +21,7 @@ class ApiClient<DefaultResourceType> {
   }
 
   private makePath(resourceId: string): string {
-    return `${this.m_server}${this.m_resource}/${resourceId}`;
+    return `${this.server}${this.resource}/${resourceId}`;
   }
 
   private async parse<ResourceType>(asyncResponse: Promise<Response>): Promise<ResourceType> {

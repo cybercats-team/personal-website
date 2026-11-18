@@ -6,7 +6,7 @@ import {
   Link
 } from "@radix-ui/themes";
 
-import { NavItem } from "@/storage/nav";
+import { NavItem } from "@/store/nav";
 import { PopoverNavContext } from "@/app/_providers/PopoverNav";
 
 export type PopoverNavItemProps = {

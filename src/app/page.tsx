@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Box,
   Container,
@@ -15,17 +13,17 @@ import Sections from "@/app/_components/Sections";
 
 export default function Home() {
   return (    
-      <Box minHeight="100vh">
-        <Header />        
-        <Container size="3">
-          <Flex direction="column" gap="4" py="5">
-            <Info />
-            <Sections />
-            <Career/>
-          </Flex>
-        </Container>
-        <Separator size="4" />
-        <Footer />
-      </Box>    
+    <Box minHeight="100vh">
+      <Header />        
+      <Container size="3">
+        <Flex direction="column" gap="4" py="5">
+          <Info />
+          <Sections />
+          <Career/>
+        </Flex>
+      </Container>
+      <Separator size="4" />
+      <Footer />
+    </Box>    
   );
 }
