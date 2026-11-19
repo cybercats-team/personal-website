@@ -6,17 +6,13 @@ import {
   Badge,
   Box,
   Flex,
-  Heading,
-  IconButton
+  Heading
 } from "@radix-ui/themes";
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon
-} from "@radix-ui/react-icons";
 
 import { Career } from "@/api/career";
 import Carousel from "@/app/_components/Career/Carousel";
+import CarouselControls from "./CarouselControls";
 
 export type ProjectCarouselProps = {
   company?: Career;
@@ -109,28 +105,11 @@ export default function ProjectCarousel({ company }: ProjectCarouselProps) {
           <Badge color="teal" variant="soft">
             {company?.projects?.length ?? 0} projects
           </Badge>
-          <IconButton
-            variant="soft"
-            color="gray"
-            radius="full"
-            size="2"
-            disabled={!canScrollProjectsLeft}
-            onClick={() => moveProjectPage(-1)}
-            aria-label="Previous projects"
-          >
-            <ChevronLeftIcon />
-          </IconButton>
-          <IconButton
-            variant="soft"
-            color="gray"
-            radius="full"
-            size="2"
-            disabled={!canScrollProjectsRight}
-            onClick={() => moveProjectPage(1)}
-            aria-label="Next projects"
-          >
-            <ChevronRightIcon />
-          </IconButton>
+          <CarouselControls 
+            left={canScrollProjectsLeft} 
+            right={canScrollProjectsRight} 
+            onScroll={moveProjectPage} 
+          />
         </Flex>
       </Flex>
       <Box

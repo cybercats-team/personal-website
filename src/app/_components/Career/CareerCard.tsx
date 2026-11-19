@@ -27,7 +27,7 @@ export default function CareerCard({ career }: CareerCardProps) {
         </CompanyPicker>
       </CompanyHeader>
       <Separator size="4" />
-      <ProjectCarousel company={company} />
+      <ProjectCarousel company={company} key={company?.name} />
     </>
   );
 }
