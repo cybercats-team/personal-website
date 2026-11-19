@@ -1,29 +1,16 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
-
 import {
-  Badge,
-  Box,
-  Card,
-  Flex,
-  Grid,
-  Heading,
-  IconButton,
-  Separator,
-  Text
+  Separator
 } from "@radix-ui/themes";
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon
-} from "@radix-ui/react-icons";
-
 import { type Career } from "@/api/career";
+import useSelectedCompany from "@/hooks/useSelectedCompany";
+
 import CompanyHeader from "@/app/_components/Career/CompanyHeader";
 import CompanyList from "@/app/_components/Career/CompanyList";
 import CompanyPicker from "@/app/_components/Career/CompanyPicker";
-import useSelectedCompany from "@/hooks/useSelectedCompany";
+import ProjectCarousel from "@/app/_components/Career/ProjectCarousel";
 
 export type CareerCardProps = {
   career: Career[];
@@ -31,93 +18,6 @@ export type CareerCardProps = {
 
 export default function CareerCard({ career }: CareerCardProps) {
   const { company, companyId, setCompanyId } = useSelectedCompany(career);
-
-  const [projectsPerPage, setProjectsPerPage] = useState(3);
-
-  const [canScrollProjectsLeft, setCanScrollProjectsLeft] =
-    useState(false);
-
-  const [canScrollProjectsRight, setCanScrollProjectsRight] =
-    useState(false);
-
-  const projectsViewportRef = useRef<HTMLDivElement | null>(null);
-
-  // Responsive number of visible projects.
-  useEffect(() => {
-    const update = () => {
-      const width = window.innerWidth;
-
-      const next = width >= 1024 ? 3 : width >= 768 ? 2 : 1;
-
-      setProjectsPerPage((current) =>
-        current === next ? current : next
-      );
-    };
-
-    update();
-
-    window.addEventListener("resize", update);
-
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  // Group projects into pages.
-  const projectPages = [];
-
-  for (
-    let index = 0;
-    index < (company?.projects?.length ?? 0);
-    index += projectsPerPage
-  ) {
-    projectPages.push(
-      company?.projects.slice(
-        index,
-        index + projectsPerPage
-      )
-    );
-  }
-
-  // Reset position and maintain arrow state.
-  useEffect(() => {
-    const viewport = projectsViewportRef.current;
-
-    if (!viewport) return;
-
-    const updateControls = () => {
-      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
-
-      setCanScrollProjectsLeft(viewport.scrollLeft > 1);
-      setCanScrollProjectsRight(
-        viewport.scrollLeft < maxScroll - 1
-      );
-    };
-
-    viewport.scrollLeft = 0;
-    updateControls();
-
-    viewport.addEventListener("scroll", updateControls, {
-      passive: true,
-    });
-
-    window.addEventListener("resize", updateControls);
-
-    return () => {
-      viewport.removeEventListener("scroll", updateControls);
-      window.removeEventListener("resize", updateControls);
-    };
-  }, [companyId, projectsPerPage]);
-
-  // Move by one complete page.
-  const moveProjectPage = (direction: 1 | -1) => {
-    const viewport = projectsViewportRef.current;
-
-    if (!viewport) return;
-
-    viewport.scrollBy({
-      left: direction * viewport.clientWidth,
-      behavior: "smooth",
-    });
-  };
 
   return (
     <>  
@@ -127,150 +27,7 @@ export default function CareerCard({ career }: CareerCardProps) {
         </CompanyPicker>
       </CompanyHeader>
       <Separator size="4" />
-      <Flex direction="column" gap="3">
-
-        {/* PROJECT HEADER */}
-
-        <Flex
-          align="center"
-          justify="between"
-          gap="3"
-        >
-          <Heading size="3">
-            Projects
-          </Heading>
-
-          <Flex align="center" gap="2">
-
-            <Badge color="teal" variant="soft">
-              {company?.projects?.length ?? 0} projects
-            </Badge>
-
-            <IconButton
-              variant="soft"
-              color="gray"
-              radius="full"
-              size="2"
-              disabled={!canScrollProjectsLeft}
-              onClick={() => moveProjectPage(-1)}
-              aria-label="Previous projects"
-            >
-              <ChevronLeftIcon />
-            </IconButton>
-
-            <IconButton
-              variant="soft"
-              color="gray"
-              radius="full"
-              size="2"
-              disabled={!canScrollProjectsRight}
-              onClick={() => moveProjectPage(1)}
-              aria-label="Next projects"
-            >
-              <ChevronRightIcon />
-            </IconButton>
-
-          </Flex>
-        </Flex>
-
-        {/* PROJECT CAROUSEL */}
-
-        {/* Buttons are the only carousel navigation. The clipped Box has no
-            visible scrollbar and cannot be manually scrolled by wheel/touch. */}
-        <Box
-          ref={projectsViewportRef}
-          width="100%"
-          height="360px"
-          overflow="hidden"
-        >
-          <Flex
-            width="100%"
-            gap="0"
-            align="stretch"
-            wrap="nowrap"
-          >
-            {projectPages.map((page, pageIndex) => (
-              <Box
-                key={pageIndex}
-                width="100%"
-                flexShrink="0"
-              >
-                <Grid
-                  columns={String(projectsPerPage)}
-                  gap="3"
-                  width="100%"
-                  align="stretch"
-                >
-                  {page?.map((project, index) => (
-                    <Card
-                      key={`${company?.name}-${pageIndex}-${index}`}
-                      asChild
-                      size="3"
-                      variant="surface"
-                    >
-                      <Box
-                        width="100%"
-                        minWidth="0"
-                        height="320px"
-                      >
-                        <Flex
-                          direction="column"
-                          gap="3"
-                          height="100%"
-                        >
-                          {/* PROJECT TITLE */}
-
-                          <Heading size="3">
-                            {project.name}
-                          </Heading>
-
-                          <Separator size="4" />
-
-                          {/* ROLE */}
-
-                          <Flex direction="column" gap="1">
-                            <Text
-                              as="div"
-                              size="1"
-                              weight="bold"
-                              color="gray"
-                            >
-                              ROLE
-                            </Text>
-
-                            <Text as="div" size="2">
-                              {project.role}
-                            </Text>
-                          </Flex>
-
-                          {/* STACK */}
-
-                          <Flex direction="column" gap="1">
-                            <Text
-                              as="div"
-                              size="1"
-                              weight="bold"
-                              color="gray"
-                            >
-                              STACK
-                            </Text>
-
-                            <Text as="div" size="2">
-                              {project.stack}
-                            </Text>
-                          </Flex>
-                        </Flex>
-                      </Box>
-                    </Card>
-                  ))}
-                </Grid>
-              </Box>
-            ))}
-          </Flex>
-        </Box>
-
-      </Flex>
-
+      <ProjectCarousel company={company} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 // Selected project highlights, not the complete project history.
 
-export type Project = {
+export type CareerProject = {
  name: string;
  role: string;
  stack: string;
@@ -10,7 +10,7 @@ export type Career = {
  name: string;
  timeline: string;
  role: string;
- projects: Project[];
+ projects: CareerProject[];
 }
 
 const experience: Career[] = [

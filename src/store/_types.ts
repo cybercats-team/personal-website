@@ -1,5 +1,5 @@
-export interface IExternalSyncStore<Snapshot> {
+export interface IExternalSyncStore<SnapshotType> {
     subscribe(onStoreChange: () => void): () => void;
-    getSnapshot(): Snapshot;
-    getServerSnapshot(): Snapshot;
+    getSnapshot(): SnapshotType;
+    getServerSnapshot(): SnapshotType;
 }

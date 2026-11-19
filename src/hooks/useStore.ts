@@ -1,10 +1,10 @@
-import { IExternalSyncStore } from "@/store/_types";
 import { useSyncExternalStore } from "react";
+import { IExternalSyncStore } from "@/store/_types";
 
-export default function useStore<T>(store: IExternalSyncStore<T>): T {
-    return useSyncExternalStore(
-        store.subscribe,
-        store.getSnapshot,
-        store.getServerSnapshot
-    );
+export default function useStore<SnapshotType>(store: IExternalSyncStore<SnapshotType>): SnapshotType {
+  return useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getServerSnapshot
+  );
 }
