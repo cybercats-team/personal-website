@@ -1,5 +1,19 @@
 // Selected project highlights, not the complete project history.
-const experience = [
+
+export type Project = {
+ name: string;
+ role: string;
+ stack: string;
+};
+
+export type Career = {
+ name: string;
+ timeline: string;
+ role: string;
+ projects: Project[];
+}
+
+const experience: Career[] = [
   {
     name: "ApriorIT",
     timeline: "Aug 2021 – Oct 2026",
@@ -148,4 +162,4 @@ const experience = [
 ];
 
 
-export const getCareer = () => experience;
+export const getCareer = (): Career[] => experience;

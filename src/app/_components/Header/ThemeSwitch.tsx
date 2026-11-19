@@ -1,36 +1,9 @@
 'use client';
 
-import {
-  Box,
-  IconButton
-} from "@radix-ui/themes";
+import dynamic from 'next/dynamic';
 
-import {
-  MoonIcon,
-  SunIcon
-} from "@radix-ui/react-icons";
-
-import useAppearance from "@/hooks/useAppearance";
+const ThemeButton = dynamic(() => import('@/app/_components/Header/ThemeSwitch/ThemeButton'), { ssr: false })
 
 export default function ThemeSwitch() {
-  const [appearance, toggleAppearance] = useAppearance();
-  
-  return (
-    <Box flexShrink="0">
-      <IconButton
-        variant="soft"
-        color="gray"
-        radius="full"
-        size="2"
-        aria-label="Toggle theme"
-        onClick={toggleAppearance}
-      >
-        {appearance === "dark" ? (
-          <SunIcon />
-        ) : (
-          <MoonIcon />
-        )}
-      </IconButton>
-    </Box>
-  )
+  return <ThemeButton />
 }

@@ -11,11 +11,19 @@ import {
 export type SectionProps = {
   id: string;
   heading: string;
+  container?: boolean;
   wrapperProps?: Partial<ComponentProps<typeof Flex>>;
   containerProps?: Partial<ComponentProps<typeof Flex>>
 };
 
-export default function Section({ id, heading, wrapperProps = {}, containerProps = {}, children }: PropsWithChildren<SectionProps>) {
+export default function Section({ 
+  id, 
+  heading, 
+  container = true, 
+  wrapperProps = {}, 
+  containerProps = {}, 
+  children 
+}: PropsWithChildren<SectionProps>) {
   return (
     <Box id={id}>
       <Card size="3">
@@ -24,9 +32,11 @@ export default function Section({ id, heading, wrapperProps = {}, containerProps
             {heading}
           </Heading>
           <Separator size="4" />
-          <Flex direction="column" gap="2" {...containerProps}>
-            {children}
-          </Flex>
+          {!container ? children : (
+            <Flex direction="column" gap="2" {...containerProps}>
+              {children}
+            </Flex>
+          )}
         </Flex>
       </Card>
     </Box>
