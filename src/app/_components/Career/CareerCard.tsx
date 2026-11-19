@@ -24,13 +24,14 @@ import {
 } from "@radix-ui/react-icons";
 
 import { type Career } from "@/api/career";
+import useSelectedCompany from "@/hooks/useSelectedCompany";
 
 export type CareerCardProps = {
   career: Career[];
 }
 
 export default function CareerCard({ career }: CareerCardProps) {
-  const [activeCompany, setActiveCompany] = useState("ApriorIT");
+  const { company, companyId, setCompanyId } = useSelectedCompany(career);
 
   const [companyPickerOpen, setCompanyPickerOpen] = useState(false);
 
@@ -43,11 +44,6 @@ export default function CareerCard({ career }: CareerCardProps) {
     useState(false);
 
   const projectsViewportRef = useRef<HTMLDivElement | null>(null);
-
-  const selectedCompany =
-    career?.find(
-      (company) => company.name === activeCompany
-    ) || career?.[0];
 
   // Responsive number of visible projects.
   useEffect(() => {
@@ -73,11 +69,11 @@ export default function CareerCard({ career }: CareerCardProps) {
 
   for (
     let index = 0;
-    index < selectedCompany?.projects.length;
+    index < (company?.projects?.length ?? 0);
     index += projectsPerPage
   ) {
     projectPages.push(
-      selectedCompany?.projects.slice(
+      company?.projects.slice(
         index,
         index + projectsPerPage
       )
@@ -112,7 +108,7 @@ export default function CareerCard({ career }: CareerCardProps) {
       viewport.removeEventListener("scroll", updateControls);
       window.removeEventListener("resize", updateControls);
     };
-  }, [activeCompany, projectsPerPage]);
+  }, [companyId, projectsPerPage]);
 
   // Move by one complete page.
   const moveProjectPage = (direction) => {
@@ -139,7 +135,7 @@ export default function CareerCard({ career }: CareerCardProps) {
           <Flex align="center" gap="2" wrap="wrap">
 
             <Heading size="4">
-              {selectedCompany?.name}
+              {company?.name}
             </Heading>
 
             {/* ICON-ONLY COMPANY PICKER */}
@@ -195,9 +191,9 @@ export default function CareerCard({ career }: CareerCardProps) {
                         gap="2"
                         size="2"
                         color="teal"
-                        value={activeCompany}
+                        value={companyId}
                         onValueChange={(value) => {
-                          setActiveCompany(value);
+                          setCompanyId(value);
                           setCompanyPickerOpen(false);
                         }}
                       >
@@ -241,14 +237,14 @@ export default function CareerCard({ career }: CareerCardProps) {
             size="2"
             color="gray"
           >
-            {selectedCompany?.timeline}
+            {company?.timeline}
           </Text>
 
           <Text
             as="div"
             size="2"
           >
-            {selectedCompany?.role}
+            {company?.role}
           </Text>
 
         </Flex>
@@ -270,7 +266,7 @@ export default function CareerCard({ career }: CareerCardProps) {
           <Flex align="center" gap="2">
 
             <Badge color="teal" variant="soft">
-              {selectedCompany?.projects.length} projects
+              {company?.projects?.length ?? 0} projects
             </Badge>
 
             <IconButton
@@ -328,9 +324,9 @@ export default function CareerCard({ career }: CareerCardProps) {
                   width="100%"
                   align="stretch"
                 >
-                  {page.map((project, index) => (
+                  {page?.map((project, index) => (
                     <Card
-                      key={`${selectedCompany?.name}-${pageIndex}-${index}`}
+                      key={`${company?.name}-${pageIndex}-${index}`}
                       asChild
                       size="3"
                       variant="surface"
