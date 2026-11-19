@@ -10,20 +10,19 @@ import {
   Grid,
   Heading,
   IconButton,
-  Popover,
-  RadioCards,
-  ScrollArea,
   Separator,
   Text
 } from "@radix-ui/themes";
 
 import {
-  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon
 } from "@radix-ui/react-icons";
 
 import { type Career } from "@/api/career";
+import CompanyHeader from "@/app/_components/Career/CompanyHeader";
+import CompanyList from "@/app/_components/Career/CompanyList";
+import CompanyPicker from "@/app/_components/Career/CompanyPicker";
 import useSelectedCompany from "@/hooks/useSelectedCompany";
 
 export type CareerCardProps = {
@@ -32,8 +31,6 @@ export type CareerCardProps = {
 
 export default function CareerCard({ career }: CareerCardProps) {
   const { company, companyId, setCompanyId } = useSelectedCompany(career);
-
-  const [companyPickerOpen, setCompanyPickerOpen] = useState(false);
 
   const [projectsPerPage, setProjectsPerPage] = useState(3);
 
@@ -111,7 +108,7 @@ export default function CareerCard({ career }: CareerCardProps) {
   }, [companyId, projectsPerPage]);
 
   // Move by one complete page.
-  const moveProjectPage = (direction) => {
+  const moveProjectPage = (direction: 1 | -1) => {
     const viewport = projectsViewportRef.current;
 
     if (!viewport) return;
@@ -124,131 +121,11 @@ export default function CareerCard({ career }: CareerCardProps) {
 
   return (
     <>  
-      <Flex
-        align="center"
-        justify="between"
-        gap="3"
-        wrap="wrap"
-      >
-        <Flex direction="column" gap="1" flexGrow="1">
-
-          <Flex align="center" gap="2" wrap="wrap">
-
-            <Heading size="4">
-              {company?.name}
-            </Heading>
-
-            {/* ICON-ONLY COMPANY PICKER */}
-
-            <Popover.Root
-              open={companyPickerOpen}
-              onOpenChange={setCompanyPickerOpen}
-            >
-              <Popover.Trigger>
-                <IconButton
-                  variant="soft"
-                  color="gray"
-                  size="2"
-                  radius="full"
-                  aria-label="Select company"
-                  title="Select company"
-                >
-                  <ChevronDownIcon />
-                </IconButton>
-              </Popover.Trigger>
-
-              <Popover.Content
-                align="start"
-                side="bottom"
-                sideOffset={8}
-                width="360px"
-                maxWidth="calc(100vw - 32px)"
-                maxHeight="360px"
-                size="2"
-              >
-                <Flex direction="column" gap="3">
-
-                  <Heading size="3">
-                    Select a company
-                  </Heading>
-
-                  {/* COMPANY LIST SCROLL AREA */}
-
-                  <ScrollArea
-                    type="always"
-                    scrollbars="vertical"
-                    size="2"
-                    style={{ width: "100%", height: 280 }}
-                  >
-                    <Flex
-                      direction="column"
-                      gap="2"
-                      p="1"
-                      pr="4"
-                    >
-                      <RadioCards.Root
-                        columns="1"
-                        gap="2"
-                        size="2"
-                        color="teal"
-                        value={companyId}
-                        onValueChange={(value) => {
-                          setCompanyId(value);
-                          setCompanyPickerOpen(false);
-                        }}
-                      >
-                        {career?.map((company) => (
-                          <RadioCards.Item
-                            key={company.name}
-                            value={company.name}
-                          >
-                            <Flex
-                              direction="column"
-                              align="start"
-                              gap="1"
-                              width="100%"
-                            >
-                              <Text as="div" size="2" weight="bold">
-                                {company.name}
-                              </Text>
-
-                              <Text as="div" size="1" color="gray">
-                                {company.timeline}
-                              </Text>
-
-                              <Text as="div" size="1" color="gray">
-                                {company.role}
-                              </Text>
-                            </Flex>
-                          </RadioCards.Item>
-                        ))}
-                      </RadioCards.Root>
-                    </Flex>
-                  </ScrollArea>
-
-                </Flex>
-              </Popover.Content>
-            </Popover.Root>
-
-          </Flex>
-
-          <Text
-            as="div"
-            size="2"
-            color="gray"
-          >
-            {company?.timeline}
-          </Text>
-
-          <Text
-            as="div"
-            size="2"
-          >
-            {company?.role}
-          </Text>
-
-        </Flex>
-      </Flex>
+      <CompanyHeader company={company}>
+        <CompanyPicker companyId={companyId} setCompanyId={setCompanyId}>
+          <CompanyList career={career} />
+        </CompanyPicker>
+      </CompanyHeader>
       <Separator size="4" />
       <Flex direction="column" gap="3">
 
