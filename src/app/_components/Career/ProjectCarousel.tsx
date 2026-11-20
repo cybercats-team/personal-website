@@ -9,7 +9,6 @@ import {
   Heading
 } from "@radix-ui/themes";
 
-
 import { Career } from "@/api/career";
 import Carousel from "@/app/_components/Career/Carousel";
 import useCarousel from "@/hooks/useCarousel";
