@@ -5,11 +5,7 @@ import { useMemo, useState } from "react";
 
 export type CompanyID = Career['name'];
 
-export type UseSelectedCompanyHook = {
-  readonly companyId?: CompanyID;
-  readonly company?: Career;
-  readonly setCompanyId: (id: CompanyID) => void;
-};
+export type UseSelectedCompanyHook = [Career | undefined, (id: CompanyID) => void];
 
 export default function useSelectedCompany(career: Career[]): UseSelectedCompanyHook {
   const [selectedCompanyId, setSelectedCompanyId] = useState<CompanyID>(() => career?.[0].name);
@@ -19,9 +15,5 @@ export default function useSelectedCompany(career: Career[]): UseSelectedCompany
     [career, selectedCompanyId]
   );
 
-  return {
-    companyId: selectedCompanyId,
-    company: selectedCompany,    
-    setCompanyId: id => setSelectedCompanyId(id)
-  };
+  return [selectedCompany,  id => setSelectedCompanyId(id)];
 }

@@ -15,6 +15,7 @@ import {
 import { GetNavItems } from "@/store/nav";
 import PopoverNavItem from "@/app/_components/Header/Nav/PopoverNavItem";
 import { PopoverNavProvider } from "@/app/_providers/PopoverNav";
+import InlineNavItem from "./Nav/InlineNavItrem";
 
 const navItems = GetNavItems();
 
@@ -42,14 +43,7 @@ export const InlineNav = () => (
             >
               <Box as="div" role="listitem">
                 <NavigationMenu.Link asChild>
-                  <Link
-                    href={`#${item.id}`}
-                    size="2"
-                    color="gray"
-                    underline="hover"
-                  >
-                    {item.label}
-                  </Link>
+                  <InlineNavItem item={item} />
                 </NavigationMenu.Link>
               </Box>
             </NavigationMenu.Item>

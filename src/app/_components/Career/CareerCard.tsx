@@ -17,12 +17,12 @@ export type CareerCardProps = {
 }
 
 export default function CareerCard({ career }: CareerCardProps) {
-  const { company, companyId, setCompanyId } = useSelectedCompany(career);
+  const [company, setCompanyId] = useSelectedCompany(career);
 
   return (
     <>  
       <CompanyHeader company={company}>
-        <CompanyPicker companyId={companyId} setCompanyId={setCompanyId}>
+        <CompanyPicker company={company} setCompanyId={setCompanyId}>
           <CompanyList career={career} />
         </CompanyPicker>
       </CompanyHeader>

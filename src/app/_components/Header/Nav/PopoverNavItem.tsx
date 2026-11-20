@@ -6,16 +6,13 @@ import {
   Link
 } from "@radix-ui/themes";
 
-import { NavItem } from "@/store/nav";
 import { PopoverNavContext } from "@/app/_providers/PopoverNav";
+import useScrollIntoView from "@/hooks/useScrollIntoView";
+import type { NavItemProps } from "@/app/_components/Header/Nav/_types";
 
-export type PopoverNavItemProps = {
-  item: NavItem;
-};
-
-export default function PopoverNavItem ({ item }: PopoverNavItemProps) {
+export default function PopoverNavItem ({ item }: NavItemProps) {
   const setMobileMenuOpen = use(PopoverNavContext);
-  const onItemClick = () => setMobileMenuOpen(false);
+  const onItemClick = useScrollIntoView(() => setMobileMenuOpen(false));
 
   return (
     <Link      
