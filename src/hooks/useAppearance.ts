@@ -1,14 +1,18 @@
 'use client';
 
-import { default as appearanceStore, type AppearanceType } from "@/store/appearance";
-import useStore from "@/hooks/useStore";
+import { useSyncExternalStore } from "react";
+import { default as store, type AppearanceType } from "@/store/appearance";
 
 export type UseAppearanceHook = [AppearanceType, () => void];
 
-const toggleAppearance = () => appearanceStore.toggleAppearance();
+const toggleAppearance = () => store.toggleAppearance();
 
 export default function useAppearance(): UseAppearanceHook {
-  const appearance = useStore<AppearanceType>(appearanceStore);
+  const appearance = useSyncExternalStore<AppearanceType>(
+      store.subscribe,
+      store.getSnapshot,
+      store.getServerSnapshot
+    );
 
   return [appearance, toggleAppearance];
 }

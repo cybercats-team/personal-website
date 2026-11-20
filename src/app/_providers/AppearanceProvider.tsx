@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, type PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { Theme } from "@radix-ui/themes";
 
 import useAppearance from "@/hooks/useAppearance";

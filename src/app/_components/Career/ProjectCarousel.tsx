@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 import {
   Badge,
@@ -12,6 +12,7 @@ import {
 
 import { Career } from "@/api/career";
 import Carousel from "@/app/_components/Career/Carousel";
+import useCarousel from "@/hooks/useCarousel";
 import CarouselControls from "./CarouselControls";
 
 export type ProjectCarouselProps = {
@@ -19,78 +20,15 @@ export type ProjectCarouselProps = {
 }
 
 export default function ProjectCarousel({ company }: ProjectCarouselProps) {
-  const [projectsPerPage, setProjectsPerPage] = useState(3);  
-
-  const [canScrollProjectsLeft, setCanScrollProjectsLeft] =
-    useState(false);
-
-  const [canScrollProjectsRight, setCanScrollProjectsRight] =
-    useState(false);
-
   const projectsViewportRef = useRef<HTMLDivElement | null>(null);
-
-  // Responsive number of visible projects.
-  useEffect(() => {
-    const update = () => {
-      const width = window.innerWidth;
-
-      const next = width >= 1024 ? 3 : width >= 768 ? 2 : 1;
-
-      setProjectsPerPage((current) =>
-        current === next ? current : next
-      );
-    };
-
-    update();
-
-    window.addEventListener("resize", update);
-
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-
-  // Reset position and maintain arrow state.
-  useEffect(() => {
-    const viewport = projectsViewportRef.current;
-
-    if (!viewport) return;
-
-    const updateControls = () => {
-      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
-
-      setCanScrollProjectsLeft(viewport.scrollLeft > 1);
-      setCanScrollProjectsRight(
-        viewport.scrollLeft < maxScroll - 1
-      );
-    };
-
-    viewport.scrollLeft = 0;
-    updateControls();
-
-    viewport.addEventListener("scroll", updateControls, {
-      passive: true,
-    });
-
-    window.addEventListener("resize", updateControls);
-
-    return () => {
-      viewport.removeEventListener("scroll", updateControls);
-      window.removeEventListener("resize", updateControls);
-    };
-  }, [company, projectsPerPage]);
-
-  // Move by one complete page.
-  const moveProjectPage = (direction: 1 | -1) => {
-    const viewport = projectsViewportRef.current;
-
-    if (!viewport) return;
-
-    viewport.scrollBy({
-      left: direction * viewport.clientWidth,
-      behavior: "smooth",
-    });
-  };
   
+  const {
+    itemsPerPage,
+    canScrollLeft,
+    canScrollRight,
+    scrollByPage
+  } = useCarousel(projectsViewportRef);
+
   return (
     <Flex direction="column" gap="3">
       <Flex
@@ -106,9 +44,9 @@ export default function ProjectCarousel({ company }: ProjectCarouselProps) {
             {company?.projects?.length ?? 0} projects
           </Badge>
           <CarouselControls 
-            left={canScrollProjectsLeft} 
-            right={canScrollProjectsRight} 
-            onScroll={moveProjectPage} 
+            left={canScrollLeft} 
+            right={canScrollRight} 
+            onScroll={scrollByPage} 
           />
         </Flex>
       </Flex>
@@ -118,7 +56,7 @@ export default function ProjectCarousel({ company }: ProjectCarouselProps) {
         height="360px"
         overflow="hidden"
       >
-        <Carousel company={company} projectsPerPage={projectsPerPage} />
+        <Carousel company={company} projectsPerPage={itemsPerPage} />
       </Box>
     </Flex>
   )

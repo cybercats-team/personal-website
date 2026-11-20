@@ -78,4 +78,6 @@ class AppearanceStore implements IExternalSyncStore<AppearanceType> {
   }
 }
 
-export default new AppearanceStore()
+const appearanceStore = new AppearanceStore();
+
+export default appearanceStore;
