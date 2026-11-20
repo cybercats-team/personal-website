@@ -3,13 +3,14 @@
 import { createApi } from "./_client";
 
 export type SectionPoint = {
-  id: number;
+  id: number;  
   content: string;
 };
 
 export type SectionType = {
   id: string;
   title: string;
+  slug: string;
   points: SectionPoint[];
 };
 

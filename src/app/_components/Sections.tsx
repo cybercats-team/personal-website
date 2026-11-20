@@ -10,15 +10,15 @@ export default async function Sections() {
   'use cache';
   const sections = await getSections();
 
-  return sections.map(({ id: sectionId, title, points }) => (
+  return sections.map(({ slug, title, points }) => (
     <Section 
-      key={sectionId}
-      id={sectionId}
+      key={slug}
+      id={slug}
       heading={title}    
     >
       {points.map(({ id, content }) => (
         <Flex
-          key={`${sectionId}-${id}`}
+          key={`${slug}-${id}`}
           align="start"
           gap="2"
         >
