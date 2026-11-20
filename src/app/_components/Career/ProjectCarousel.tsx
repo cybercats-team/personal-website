@@ -51,13 +51,13 @@ const CarouselInner = ({ company, projectsPerPage }: CarouselProps) => {
         </Flex>
       </Flex>
       <Box
-          ref={projectsViewportRef}
-          width="100%"
-          height="360px"
-          overflow="hidden"
-        >
-        <Carousel company={company} projectsPerPage={projectsPerPage} />
-      </Box>
+        ref={projectsViewportRef}
+        width="100%"
+        height="360px"
+        overflow="hidden"
+      >
+      <Carousel company={company} projectsPerPage={projectsPerPage} />
+    </Box>
     </Flex>
   )
 }
