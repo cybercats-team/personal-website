@@ -63,6 +63,7 @@ export const PopoverNav = () => (
           color="gray"
           radius="full"
           size="2"
+          style={{ cursor: "pointer" }}
           title="Navigation menu"
         >
           <HamburgerMenuIcon />

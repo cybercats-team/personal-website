@@ -1,63 +1,39 @@
-export type ContactInfo = {
-  id: string;
-  label: string;
-  href: string;
+'use server';
+
+import { createApi } from "@/api/_client";
+
+export enum ContactType {
+  kUnspecified = "",
+  kEmail       = "email",
+  kPhone       = "phone",
+  kLinkedIn    = "linkedin",
+  kUpWork      = "upwork",
+  kGitHub      = "github",
+  kTelegram    = "telegram",
+  kViber       = "viber",
+  kGravatar    = "gravatar",
+  kGoogleMeet  = "calendly"
+}
+
+export type InfoContact = {
+  id: number;
+  type: ContactType;
+  account: string;
+  url: string;
+  internalId: string;
 };
 
 export type Info = {
-  contacts: ContactInfo[];
-};
+  id: number;
+  fullName: string;
+  title: string;
+  location: string;
+  extra: string;
+  contacts: InfoContact[];
+}
 
-const allContacts: ContactInfo[] = [
-    {
-      id: "email",
-      label: "email",
-      href: "mailto:alexcyberneticist@gmail.com",
-    },
-    {
-      id: "phone",
-      label: "phone",
-      href: "tel:+380639549357",
-    },
-    {
-      id: "linkedin",
-      label: "linkedin",
-      href: "#"
-    },
-    {
-      id: "upwork",
-      label: "upwork",
-      href: '#',
-    },
-    {
-      id: "github",
-      label: "github",
-      href: '#',
-    },
-    {
-      id: "telegram",
-      label: "telegram",
-      href: '#',
-    },
-    {
-      id: "viber",
-      label: "viber",
-      href: '#',
-    },
-    {
-      id: "gravatar",
-      label: "gravatar",
-      href: '#',
-    },
-    {
-      id: "calendly",
-      label: "calendly",
-      href: '#',
-    },
-  ]
+const infoApi = createApi<Info>('info');
 
-export const getInfo = (): Info => {
-  const contacts = allContacts.filter(({ href }) => Boolean('#' !== href));
-
-  return { contacts };
-};
+export async function getInfo(): Promise<Info> {
+  return infoApi.get('/');
+}

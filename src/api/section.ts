@@ -1,6 +1,6 @@
 'use server';
 
-import { createApi } from "./_client";
+import { createApi } from "@/api/_client";
 
 export type SectionPoint = {
   id: number;  

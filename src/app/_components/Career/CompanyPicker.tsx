@@ -44,6 +44,7 @@ export default function CompanyPicker({ company, setCompanyId, children }: Props
           radius="full"
           aria-label="Select company"
           title="Select company"
+          style={{ cursor: "pointer" }}
         >
           <ChevronDownIcon />
         </IconButton>

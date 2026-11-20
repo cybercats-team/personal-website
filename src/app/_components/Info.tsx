@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Badge,
   Box,
   Card,
@@ -11,9 +10,11 @@ import {
 
 import { getInfo } from "@/api/info";
 import InfoContacts from "@/app/_components/Info/Contacts";
+import InfoAvatar from "@/app/_components/Info/InfoAvatar";
 
-export default function Info() {
-  const info = getInfo();
+export default async function Info() {
+  'use cache';  
+  const info = await getInfo();
 
   return (
     <Box id="about">
@@ -23,29 +24,24 @@ export default function Info() {
           align={{ initial: "start", sm: "center" }}
           gap="5"
         >
-          <Avatar
-            src={undefined}
-            fallback="OS"
-            size="8"
-            radius="full"
-          />
+          <InfoAvatar info={info} />
           <Flex direction="column" gap="2" flexGrow="1">
             <Heading size="7">
-              Oleksii Serdiukov
+              {info.fullName}
             </Heading>
             <Heading
               size="4"
               weight="medium"
               color="gray"
             >
-              Senior Software Developer, Team lead, Architect
+              {info.title}
             </Heading>
             <Text color="gray" size="2">
-              Ukraine, Kyiv region, Boiarka
+              {info.location}
             </Text>
             <Flex align="center" gap="2">
               <Badge color="teal" variant="soft">
-                English: Upper-Intermediate
+                {info.extra}
               </Badge>
             </Flex>
             <Separator size="4" my="2" />

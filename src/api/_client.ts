@@ -8,26 +8,48 @@ const apiConfig: ApiConfig = {
   backendUrl: process.env.BACKEND_URL ?? ''
 };
 
-class ApiClient<DefaultResourceType> {
+class ApiClient<ResourceType> {
   constructor(
     private resource: string,
     private server: string
   ) { }
 
-  async get<ResourceType = DefaultResourceType>(resourceId: string = '') {
-    return this.parse<ResourceType>(fetch(this.makePath(resourceId), {
+  async get(): Promise<ResourceType[]>;
+  async get(resourceId: string): Promise<ResourceType>;
+
+  async get(resourceId?: string): Promise<ResourceType | ResourceType[]> {
+    const request = fetch(this.makePath(resourceId), {
       headers: { 'Accept': 'application/json' }
-    }));
+    });
+
+    return resourceId 
+      ? this.parse<ResourceType>(request)
+      : this.parse<ResourceType[]>(request);
   }
 
-  private makePath(resourceId: string): string {
-    return `${this.server}${this.resource}/${resourceId}`;
+  private makePath(resourceId?: string): string {
+    const path = `${this.server}${this.resource}`;
+
+    if (!resourceId) {
+      return path;
+    }
+
+    const id = resourceId.startsWith('/') 
+      ? resourceId.slice(1) : resourceId;
+
+    return `${path}/${id}`;
   }
 
-  private async parse<ResourceType>(asyncResponse: Promise<Response>): Promise<ResourceType> {
-    return asyncResponse.then(response => response.json()) as Promise<ResourceType>;
+  private async parse<ReturnType>(asyncResponse: Promise<Response>): Promise<ReturnType> {
+    return asyncResponse.then(response => response.json()) as Promise<ReturnType>;
   }
 }
 
-export const createApi = <DefaultResourceType>(resource: string, server: string = apiConfig.backendUrl) =>
-  new ApiClient<DefaultResourceType>(resource, server);
+export const createApi = <ResourceType>(resource: string, server: string = apiConfig.backendUrl) =>
+  new ApiClient<ResourceType>(resource, server);
+
+export const getAvatarUrl = (hash: string, size?: number): string => {
+  const url = `${apiConfig.gravatarUrl}avatar/${hash}`;
+
+  return size ? `${url}?s=${size}` : url;
+}

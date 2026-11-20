@@ -15,6 +15,7 @@ export default function CompanyList({ career }: CompanyListProps) {
     <RadioCards.Item
       key={company.name}
       value={company.name}
+      style={{ cursor: "pointer" }}
     >
       <Flex
         direction="column"

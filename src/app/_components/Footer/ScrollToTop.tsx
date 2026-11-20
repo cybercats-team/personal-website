@@ -20,6 +20,7 @@ export default function ScrollToTop() {
       size="2"
       aria-label="Scroll to top"
       title="Scroll to top"
+      style={{ cursor: "pointer" }}
       onClick={onScrollToTopClicked}
     >
       <ArrowUpIcon />

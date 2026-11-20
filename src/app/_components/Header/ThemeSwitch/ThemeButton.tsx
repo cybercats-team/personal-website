@@ -23,6 +23,7 @@ export default function ThemeButton() {
         radius="full"
         size="2"
         aria-label="Toggle theme"
+        style={{ cursor: "pointer" }}
         onClick={toggleAppearance}
       >
         {appearance === "dark" ? (

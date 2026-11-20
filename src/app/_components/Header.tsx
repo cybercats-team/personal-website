@@ -2,12 +2,12 @@ import {
   Box,
   Card,
   Container,
-  Flex,
-  Text
+  Flex,  
 } from "@radix-ui/themes";
 
 import { InlineNav, PopoverNav } from "@/app/_components/Header/Nav";
 import ThemeSwitch from "@/app/_components/Header/ThemeSwitch";
+import Title from "@/app/_components/Header/Title";
 
 export default function Header() {
   return (
@@ -34,9 +34,7 @@ export default function Header() {
             >
               <PopoverNav />
               <Box flexShrink="0">
-                <Text weight="bold" size="3">
-                  Oleksii Serdiukov
-                </Text>
+                <Title />
               </Box>
             </Flex>
             <InlineNav />

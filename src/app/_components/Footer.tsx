@@ -11,8 +11,9 @@ import ScrollToTop from "@/app/_components/Footer/ScrollToTop";
 
 const currentYear = (new Date()).getFullYear();
 
-export default function Footer() {
-  const info = getInfo();
+export default async function Footer() {
+  'use cache';
+  const info = await getInfo();
 
   return (
     <Container size="3">
@@ -24,9 +25,8 @@ export default function Footer() {
         wrap="wrap"
       >
         <Text size="1" color="gray">
-          © {currentYear} Oleksii Serdiukov
-        </Text>
-        <Flex align="center" gap="3" wrap="wrap">
+          © {currentYear} {info.fullName}.
+          &nbsp;
           <Link
             href="https://vercel.com"
             target="_blank"
@@ -36,6 +36,9 @@ export default function Footer() {
           >
             Powered by Vercel
           </Link>
+        </Text>
+        <Flex align="center" gap="3" wrap="wrap">
+          
           <FooterContacts contacts={info.contacts} />
           <ScrollToTop />
         </Flex>

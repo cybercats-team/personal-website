@@ -26,6 +26,7 @@ export default function CarouselControls({ left, right, onScroll }: CarouselCont
         size="2"
         disabled={!left}
         onClick={scrollLeft}
+        style={{ cursor: "pointer" }}
         aria-label="Previous projects"
       >
         <ChevronLeftIcon />
@@ -37,6 +38,7 @@ export default function CarouselControls({ left, right, onScroll }: CarouselCont
         size="2"
         disabled={!right}
         onClick={scrollRight}
+        style={{ cursor: "pointer" }}
         aria-label="Next projects"
       >
         <ChevronRightIcon />
