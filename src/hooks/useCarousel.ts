@@ -1,8 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
-import useWindowWidth from "./useWindowWidth";
 
-export type UseCarouselHook = {
-  itemsPerPage: number;
+export type UseCarouselHook = {  
   canScrollLeft: boolean;
   canScrollRight: boolean;
   scrollByPage: (direction: 1 | -1) => void;
@@ -12,9 +10,6 @@ export default function useCarousel(ref: RefObject<HTMLDivElement | null>): UseC
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   
-  const width = useWindowWidth();
-  const itemsPerPage = width >= 1024 ? 3 : width >= 768 ? 2 : 1;    
-
   useEffect(() => {
     const viewport = ref.current;
 
@@ -39,10 +34,9 @@ export default function useCarousel(ref: RefObject<HTMLDivElement | null>): UseC
       window.removeEventListener("resize", updateControls);
       viewport.removeEventListener("scroll", updateControls);
     }
-  }, [itemsPerPage, ref]);
+  }, [ref]);
 
   return {
-    itemsPerPage,
     canScrollLeft,
     canScrollRight,
 

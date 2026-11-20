@@ -10,19 +10,20 @@ import {
 } from "@radix-ui/themes";
 
 import { Career } from "@/api/career";
-import Carousel from "@/app/_components/Career/Carousel";
 import useCarousel from "@/hooks/useCarousel";
-import CarouselControls from "./CarouselControls";
+import useWindowWidth from "@/hooks/useWindowWidth";
+
+import { default as Carousel, type CarouselProps } from "@/app/_components/Career/Carousel";
+import CarouselControls from "@/app/_components/Career/CarouselControls";
 
 export type ProjectCarouselProps = {
   company?: Career;
 }
 
-export default function ProjectCarousel({ company }: ProjectCarouselProps) {
+const CarouselInner = ({ company, projectsPerPage }: CarouselProps) => {
   const projectsViewportRef = useRef<HTMLDivElement | null>(null);
   
-  const {
-    itemsPerPage,
+  const {    
     canScrollLeft,
     canScrollRight,
     scrollByPage
@@ -41,7 +42,7 @@ export default function ProjectCarousel({ company }: ProjectCarouselProps) {
         <Flex align="center" gap="2">
           <Badge color="teal" variant="soft">
             {company?.projects?.length ?? 0} projects
-          </Badge>
+          </Badge>          
           <CarouselControls 
             left={canScrollLeft} 
             right={canScrollRight} 
@@ -50,13 +51,26 @@ export default function ProjectCarousel({ company }: ProjectCarouselProps) {
         </Flex>
       </Flex>
       <Box
-        ref={projectsViewportRef}
-        width="100%"
-        height="360px"
-        overflow="hidden"
-      >
-        <Carousel company={company} projectsPerPage={itemsPerPage} />
+          ref={projectsViewportRef}
+          width="100%"
+          height="360px"
+          overflow="hidden"
+        >
+        <Carousel company={company} projectsPerPage={projectsPerPage} />
       </Box>
     </Flex>
+  )
+}
+
+export default function ProjectCarousel({ company }: ProjectCarouselProps) {
+  const width = useWindowWidth();
+  const itemsPerPage = width >= 1024 ? 3 : width >= 768 ? 2 : 1;    
+
+  return (
+    <CarouselInner 
+      company={company} 
+      projectsPerPage={itemsPerPage} 
+      key={itemsPerPage} 
+    />
   )
 }
