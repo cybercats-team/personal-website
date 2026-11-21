@@ -6,10 +6,10 @@ import {
   Text
 } from "@radix-ui/themes";
 
-import { type Career } from "@/api/career";
+import { type Company } from "@/api/career";
 
 export type CompanyHeaderProps = {  
-  company?: Career;
+  company?: Company;
 }
 
 export default function CompanyHeader({ company, children }: PropsWithChildren<CompanyHeaderProps>) {
@@ -23,7 +23,7 @@ export default function CompanyHeader({ company, children }: PropsWithChildren<C
       <Flex direction="column" gap="1" flexGrow="1">
         <Flex align="center" gap="2" wrap="wrap">
           <Heading size="4">
-            {company?.name}
+            {company?.title}
           </Heading>
           {children}
         </Flex>
@@ -33,13 +33,7 @@ export default function CompanyHeader({ company, children }: PropsWithChildren<C
           color="gray"
         >
           {company?.timeline}
-        </Text>
-        <Text
-          as="div"
-          size="2"
-        >
-          {company?.role}
-        </Text>
+        </Text>        
       </Flex>
     </Flex>
   )

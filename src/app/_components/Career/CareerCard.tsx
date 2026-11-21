@@ -4,7 +4,7 @@ import {
   Separator
 } from "@radix-ui/themes";
 
-import { type Career } from "@/api/career";
+import { type Company } from "@/api/career";
 import useSelectedCompany from "@/hooks/useSelectedCompany";
 
 import CompanyHeader from "@/app/_components/Career/CompanyHeader";
@@ -13,7 +13,7 @@ import CompanyPicker from "@/app/_components/Career/CompanyPicker";
 import ProjectCarousel from "@/app/_components/Career/ProjectCarousel";
 
 export type CareerCardProps = {
-  career: Career[];
+  career: Company[];
 }
 
 export default function CareerCard({ career }: CareerCardProps) {
@@ -27,7 +27,7 @@ export default function CareerCard({ career }: CareerCardProps) {
         </CompanyPicker>
       </CompanyHeader>
       <Separator size="4" />
-      <ProjectCarousel company={company} key={company?.name} />
+      <ProjectCarousel company={company} key={company?.id} />
     </>
   );
 }

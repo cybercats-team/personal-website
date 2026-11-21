@@ -2,8 +2,9 @@ import { getCareer } from "@/api/career"
 import Section from "@/app/_ui/Section";
 import CareerCard from "./Career/CareerCard";
 
-export default function Career() {
-  const career = getCareer();
+export default async function Career() {
+  'use cache';
+  const career = await getCareer();
 
   return (
     <Section

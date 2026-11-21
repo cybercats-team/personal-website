@@ -24,7 +24,7 @@ import { type InfoContact, ContactType } from "@/api/info";
 export type IconType = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
 const socialIcons: Record<ContactType, IconType> = {
-  [ContactType.kUnspecified]: forwardRef(() => null),
+  [ContactType.kUnspecified]: forwardRef(function NoIcon () { return null; }),
   [ContactType.kEmail]:       EnvelopeClosedIcon,
   [ContactType.kPhone]:       MobileIcon,
   [ContactType.kLinkedIn]:    LinkedInLogoIcon,

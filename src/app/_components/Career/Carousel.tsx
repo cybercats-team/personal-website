@@ -6,18 +6,14 @@ import {
   Grid
 } from "@radix-ui/themes";
 
-import { Career } from "@/api/career";
+import type { Company } from "@/api/career";
 import Project from "@/app/_components/Career/Project";
-import useCarouselData from "@/hooks/useCarouselData";
 
 export type CarouselProps = {
-  projectsPerPage: number;
-  company?: Career;
+  company?: Company;
 }
 
-export default function ProjectCarousel({ company, projectsPerPage }: CarouselProps) {
-  const projectPages = useCarouselData(projectsPerPage, company?.projects);
-
+export default function ProjectCarousel({ company }: CarouselProps) {
   return (
     <Flex
       width="100%"
@@ -25,21 +21,20 @@ export default function ProjectCarousel({ company, projectsPerPage }: CarouselPr
       align="stretch"
       wrap="nowrap"
     >
-      {projectPages.map((page, pageIndex) => (
+      {company?.projects.map((project) => (
         <Box
-          key={pageIndex}
+          key={`${company?.id}-${project.id}`}
           width="100%"
           flexShrink="0"
         >
           <Grid
-            columns={String(projectsPerPage)}
+            columns="1"
             gap="3"
             width="100%"
             align="stretch"
-          >
-            {page?.map((project) => (
-              <Project project={project} key={`${company?.name}-${project.name}`} />
-            ))}
+            height="stretch"            
+          >            
+            <Project project={project} />            
           </Grid>
         </Box>
       ))}

@@ -3,7 +3,6 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import {
   Box,
   Flex,
-  Link,
   IconButton,
   Popover
 } from "@radix-ui/themes";

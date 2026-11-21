@@ -9,18 +9,12 @@ import {
   Heading
 } from "@radix-ui/themes";
 
-import { Career } from "@/api/career";
 import useCarousel from "@/hooks/useCarousel";
-import useWindowWidth from "@/hooks/useWindowWidth";
 
 import { default as Carousel, type CarouselProps } from "@/app/_components/Career/Carousel";
 import CarouselControls from "@/app/_components/Career/CarouselControls";
 
-export type ProjectCarouselProps = {
-  company?: Career;
-}
-
-const CarouselInner = ({ company, projectsPerPage }: CarouselProps) => {
+export default function ProjectCarousel({ company }: CarouselProps) {
   const projectsViewportRef = useRef<HTMLDivElement | null>(null);
   
   const {    
@@ -52,25 +46,11 @@ const CarouselInner = ({ company, projectsPerPage }: CarouselProps) => {
       </Flex>
       <Box
         ref={projectsViewportRef}
-        width="100%"
-        height="360px"
+        width="100%"        
         overflow="hidden"
       >
-      <Carousel company={company} projectsPerPage={projectsPerPage} />
+      <Carousel company={company} />
     </Box>
     </Flex>
-  )
-}
-
-export default function ProjectCarousel({ company }: ProjectCarouselProps) {
-  const width = useWindowWidth();
-  const itemsPerPage = width >= 1024 ? 3 : width >= 768 ? 2 : 1;    
-
-  return (
-    <CarouselInner 
-      company={company} 
-      projectsPerPage={itemsPerPage} 
-      key={itemsPerPage} 
-    />
   )
 }

@@ -16,18 +16,18 @@ import {
 } from "@radix-ui/react-icons";
 
 import { type CompanyID } from "@/hooks/useSelectedCompany";
-import { Career } from "@/api/career";
+import { Company } from "@/api/career";
 
 export type CompanyPickerProps = {  
-  company?: Career;
+  company?: Company;
   setCompanyId: (id: CompanyID) => void;
 }
 
 export default function CompanyPicker({ company, setCompanyId, children }: PropsWithChildren<CompanyPickerProps>) {
   const [pickerOpen, setPickerOpen] = useState(false);
   
-  const onCompanySelected = (value: CompanyID) => {
-    setCompanyId(value);
+  const onCompanySelected = (value: string) => {
+    setCompanyId(parseInt(value));
     setPickerOpen(false);
   }
 
@@ -79,7 +79,7 @@ export default function CompanyPicker({ company, setCompanyId, children }: Props
                 gap="2"
                 size="2"
                 color="teal"
-                value={company?.name}
+                value={company ? String(company.id) : ''}
                 onValueChange={onCompanySelected}
               >
                 {children}

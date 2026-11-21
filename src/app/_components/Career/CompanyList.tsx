@@ -4,17 +4,17 @@ import {
   Text
 } from "@radix-ui/themes";
 
-import { type Career } from "@/api/career";
+import { type Company } from "@/api/career";
 
 export type CompanyListProps = {
-  career?: Career[];
+  career?: Company[];
 }
 
 export default function CompanyList({ career }: CompanyListProps) {
   return career?.map((company) => (
     <RadioCards.Item
-      key={company.name}
-      value={company.name}
+      key={company.id}
+      value={String(company.id)}
       style={{ cursor: "pointer" }}
     >
       <Flex
@@ -24,14 +24,11 @@ export default function CompanyList({ career }: CompanyListProps) {
         width="100%"
       >
         <Text as="div" size="2" weight="bold">
-          {company.name}
+          {company.title}
         </Text>
         <Text as="div" size="1" color="gray">
           {company.timeline}
-        </Text>
-        <Text as="div" size="1" color="gray">
-          {company.role}
-        </Text>
+        </Text>        
       </Flex>
     </RadioCards.Item>
   ))

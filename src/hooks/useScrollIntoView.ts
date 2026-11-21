@@ -13,7 +13,7 @@ export default function useScrollIntoView(onClick?: OnLinkClickHandler): OnLinkC
     
     const { href } = e.currentTarget;    
     
-    if ("undefined" === typeof URL || "undefined" == typeof window) {
+    if ("undefined" === typeof URL || "undefined" == typeof window || "undefined" == typeof history) {
       return;
     }    
     
@@ -35,7 +35,8 @@ export default function useScrollIntoView(onClick?: OnLinkClickHandler): OnLinkC
       return;
     }
 
-    e.preventDefault();
-    target.scrollIntoView({ behavior: "smooth" });    
+    e.preventDefault();    
+    target.scrollIntoView({ behavior: "smooth", block: "center" });          
+    history.pushState(null, '', url!.hash!);
   }, [onClick])
 }

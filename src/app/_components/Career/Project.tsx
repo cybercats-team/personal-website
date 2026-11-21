@@ -7,10 +7,10 @@ import {
   Text
 } from "@radix-ui/themes";
 
-import { type CareerProject } from "@/api/career";
+import { type CompanyProject } from "@/api/career";
 
 export type ProjectProps = {
-  project: CareerProject;
+  project: CompanyProject;
 }
 
 export default function Project({ project }: ProjectProps) {
@@ -22,8 +22,7 @@ export default function Project({ project }: ProjectProps) {
     >
       <Box
         width="100%"
-        minWidth="0"
-        height="320px"
+        minWidth="0"        
       >
         <Flex
           direction="column"
@@ -31,7 +30,7 @@ export default function Project({ project }: ProjectProps) {
           height="100%"
         >          
           <Heading size="3">
-            {project.name}
+            {project.summary}
           </Heading>
           <Separator size="4" />
           <Flex direction="column" gap="1">
@@ -58,6 +57,30 @@ export default function Project({ project }: ProjectProps) {
             </Text>
             <Text as="div" size="2">
               {project.stack}
+            </Text>
+          </Flex>
+          <Flex direction="column" gap="1">
+            <Text
+              as="div"
+              size="1"
+              weight="bold"
+              color="gray"
+            >
+              TASKS
+            </Text>
+            <Text as="div" size="2">
+              {project.tasks.map(({ id, content }) => (
+                <Flex
+                  key={`${project.id}-${id}`}
+                  align="start"
+                  gap="2"
+                >
+                  <Text color="teal" weight="bold" size="2">
+                    &bull;
+                  </Text>
+                  <Text size="2">{content}</Text>
+                </Flex>
+              ))}
             </Text>
           </Flex>
         </Flex>

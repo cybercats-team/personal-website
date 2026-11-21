@@ -1,17 +1,17 @@
 'use client';
 
-import { Career } from "@/api/career";
+import { Company } from "@/api/career";
 import { useMemo, useState } from "react";
 
-export type CompanyID = Career['name'];
+export type CompanyID = Company['id'];
 
-export type UseSelectedCompanyHook = [Career | undefined, (id: CompanyID) => void];
+export type UseSelectedCompanyHook = [Company | undefined, (id: CompanyID) => void];
 
-export default function useSelectedCompany(career: Career[]): UseSelectedCompanyHook {
-  const [selectedCompanyId, setSelectedCompanyId] = useState<CompanyID>(() => career?.[0].name);
+export default function useSelectedCompany(career: Company[]): UseSelectedCompanyHook {
+  const [selectedCompanyId, setSelectedCompanyId] = useState<CompanyID>(() => career?.[0]?.id);
 
   const selectedCompany = useMemo(() =>
-    career?.find(({ name }) => name === selectedCompanyId),
+    career?.find(({ id }) => id === selectedCompanyId),
     [career, selectedCompanyId]
   );
 
