@@ -14,7 +14,7 @@ import {
 import { GetNavItems } from "@/store/nav";
 import PopoverNavItem from "@/app/_components/Header/Nav/PopoverNavItem";
 import { PopoverNavProvider } from "@/app/_providers/PopoverNav";
-import InlineNavItem from "./Nav/InlineNavItrem";
+import InlineNavItem from "./Nav/InlineNavItem";
 
 const navItems = GetNavItems();
 
