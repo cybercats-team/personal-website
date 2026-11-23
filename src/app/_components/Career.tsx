@@ -9,7 +9,7 @@ export default async function Career() {
   return (
     <Section
       id="career"
-      heading="CAREER HISTORY & PROJECT HIGHLIGHTS"
+      heading="CAREER HIGHLIGHTS"
       wrapperProps={{ gap: "4" }}
       container={false}
     >
